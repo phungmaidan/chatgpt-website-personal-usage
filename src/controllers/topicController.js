@@ -18,6 +18,7 @@ const createNew = async (req, res) => {
     }
 };
 
+
 export const topicController = {
     createNew
 }

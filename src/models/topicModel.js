@@ -66,9 +66,24 @@ const findOneById = async (topic_id) => {
     return await topicsCollection.findOne({ _id: new ObjectId(topic_id) });
 };
 
+// Hàm thêm message dựa vào ID
+// Push cardId vào cuối mảng cardOrderIds
+const pushMessage = async (message) => {
+    try {
+      const result = await GET_DB().collection(TOPIC_COLLECTION_NAME).findOneAndUpdate(
+        { _id: new ObjectId(message.topic_id) },
+        { $push: { message_ids: new ObjectId(message._id) } },
+        { returnDocument: 'after' }
+      )
+  
+      return result
+    } catch (error) { throw new Error(error) }
+  }
+
 export const topicModel = {
     createNew,
     update,
     findManyByUserId,
+    pushMessage,
     findOneById
 };

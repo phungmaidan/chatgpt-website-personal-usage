@@ -13,7 +13,6 @@ const createNew = async (reqBody) => {
         }
         const createdTopic = await topicModel.createNew(newTopic)
         const getNewTopic = await topicModel.findOneById(createdTopic.insertedId)
-        console.log('🚀 ~ createNew ~ getNewTopic:', getNewTopic)
         
         return getNewTopic
     } catch (error) { throw error }
