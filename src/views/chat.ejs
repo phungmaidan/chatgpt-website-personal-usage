@@ -1,0 +1,67 @@
+<!-- src/views/chat.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with GPT</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>Chat with GPT</h1>
+
+    <div id="chatBox">
+        <div id="messagesContainer">
+            <!-- Các tin nhắn sẽ hiển thị ở đây -->
+        </div>
+
+        <textarea id="messageInput" rows="4" cols="50"></textarea><br>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userMessage = document.getElementById('messageInput').value;
+
+            // Kiểm tra tin nhắn có trống không
+            if (!userMessage.trim()) {
+                alert("Please enter a message");
+                return;
+            }
+
+            // Gửi yêu cầu POST tới server
+            axios.post('/v1/chat', { message: userMessage })
+                .then(function (response) {
+                    // Lấy câu trả lời từ ChatGPT
+                    const chatGPTResponse = response.data.chatGPTResponse;
+
+                    // Cập nhật giao diện
+                    const messagesContainer = document.getElementById('messagesContainer');
+
+                    // Thêm tin nhắn của người dùng
+                    const userMessageElement = document.createElement('p');
+                    userMessageElement.textContent = 'You: ' + userMessage;
+                    messagesContainer.appendChild(userMessageElement);
+
+                    // Thêm câu trả lời từ ChatGPT
+                    const botMessageElement = document.createElement('p');
+                    botMessageElement.textContent = 'Bot: ' + chatGPTResponse;
+                    messagesContainer.appendChild(botMessageElement);
+
+                    // Cuộn xuống cuối cùng
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // Làm sạch input
+                    document.getElementById('messageInput').value = '';
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+        }
+    </script>
+</body>
+
+</html>
